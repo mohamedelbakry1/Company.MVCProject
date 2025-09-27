@@ -25,5 +25,6 @@ namespace Company.MVCProject.DAL.Data.Contexts
         //    optionsBuilder.UseSqlServer("Server=FCBARCELONA;Database=Company;Trusted_Connection=True;TrustServerCertificate=True");
         //}
         public DbSet<Department> Departments { get; set; }
+        public DbSet<Employee> Employees { get; set; }
     }
 }

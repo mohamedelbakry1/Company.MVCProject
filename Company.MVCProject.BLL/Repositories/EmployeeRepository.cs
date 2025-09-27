@@ -9,12 +9,16 @@ using System.Threading.Tasks;
 
 namespace Company.MVCProject.BLL.Repositories
 {
-    public class DepartmentRepository : GenericRepository<Department>, IDepartmentRepository
+    public class EmployeeRepository : GenericRepository<Employee>, IEmployeeRepository
     {
-        public DepartmentRepository(CompanyDbContext options) : base(options)
+
+        public EmployeeRepository(CompanyDbContext options):base(options)
         {
             
         }
+
+
+
 
     }
 }
