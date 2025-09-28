@@ -31,7 +31,7 @@ namespace Company.MVCProject.PL.Controllers
         {
             if (ModelState.IsValid)
             {
-                var employee = new Company.MVCProject.DAL.Models.Employee
+                var employee = new Employee()
                 {
                     Name = model.Name,
                     Age = model.Age,
@@ -64,21 +64,38 @@ namespace Company.MVCProject.PL.Controllers
         [HttpGet]
         public IActionResult Edit(int? id)
         {
-            return Details(id, "Edit");
+            if (id is null) return BadRequest("Invalid Id");
+
+            var employee = _employeeRepository.Get(id.Value);
+            if (employee is null) return NotFound($"Employee wtih {id} is not found");
+            var employeeDto = new CreateEmployeeDto()
+            {
+                Name = employee.Name,
+                Age = employee.Age,
+                Email = employee.Email,
+                Address = employee.Address,
+                Phone = employee.Phone,
+                Salary = employee.Salary,
+                IsActive = employee.IsActive,
+                IsDeleted = employee.IsDeleted,
+                HiringDate = employee.HiringDate,
+                CreateAt = employee.CreateAt
+            };
+            return View(employeeDto);
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Edit([FromRoute] int id, Employee employee)
+        public IActionResult Edit([FromRoute] int id, Employee model)
         {
             if (ModelState.IsValid)
             {
-                if(id != employee.Id) return BadRequest("Id is not matched");
-                var count = _employeeRepository.Update(employee);
+                if (id != model.Id) return BadRequest("Id is not matched");
+                var count = _employeeRepository.Update(model);
                 if(count > 0)
                     return RedirectToAction(nameof(Index));
             }
-            return View(employee);
+            return View(model);
         }
 
         [HttpGet]
