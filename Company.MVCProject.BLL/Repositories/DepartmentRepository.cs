@@ -11,7 +11,7 @@ namespace Company.MVCProject.BLL.Repositories
 {
     public class DepartmentRepository : GenericRepository<Department>, IDepartmentRepository
     {
-        public DepartmentRepository(CompanyDbContext options) : base(options)
+        public DepartmentRepository(CompanyDbContext context) : base(context)
         {
             
         }

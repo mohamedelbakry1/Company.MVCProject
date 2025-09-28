@@ -62,11 +62,17 @@ namespace Company.MVCProject.PL.Controllers
         [HttpGet]
         public IActionResult Edit(int? id)
         {
-            //if (id is null) return BadRequest("Invalid Id");
-            //var department = _departmentRepository.Get(id.Value);
-            //if (department is null) return NotFound($"Department with {id} Not Found");
-            //return View(department);
-            return Details(id, "Edit");
+            if (id is null) return BadRequest("Invalid Id");
+            var department = _departmentRepository.Get(id.Value);
+            if (department is null) return NotFound($"Department with {id} Not Found");
+            var departmentDto = new CreateDepartmentDto()
+            {
+                Code = department.Code,
+                Name = department.Name,
+                CreateAt = department.CreateAt
+            };
+            return View(departmentDto);
+            //return Details(id, "Edit");
         }
 
         [HttpPost]

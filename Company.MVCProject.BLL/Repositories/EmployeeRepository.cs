@@ -12,7 +12,7 @@ namespace Company.MVCProject.BLL.Repositories
     public class EmployeeRepository : GenericRepository<Employee>, IEmployeeRepository
     {
 
-        public EmployeeRepository(CompanyDbContext options):base(options)
+        public EmployeeRepository(CompanyDbContext context):base(context)
         {
             
         }
