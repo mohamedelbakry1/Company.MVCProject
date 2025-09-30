@@ -17,6 +17,15 @@ namespace Company.MVCProject.PL.Controllers
         public IActionResult Index()
         {
             var employees = _employeeRepository.GetAll();
+            // Dictionary : 3 Property
+            // 1.ViewData : Transfer Extra Information From Controller (Action) to View
+            //ViewData["Message"] = "Hello from ViewData";
+
+
+            // 2.ViewBag : Transfer Extra Information From Controller (Action) to View
+            //ViewBag.Message = "Hello from ViewBag";
+            //ViewBag.Message = new { Message = "Hello from ViewBag" };
+            // 3.TempData
             return View(employees);
         }
 
@@ -46,7 +55,10 @@ namespace Company.MVCProject.PL.Controllers
                 };
                 var count = _employeeRepository.Add(employee);
                 if(count > 0)
-                return RedirectToAction("Index");
+                {
+                    TempData["Message"] = "Employee Created Successfully";
+                    return RedirectToAction("Index");
+                }
             }
             return View(model);
         }
