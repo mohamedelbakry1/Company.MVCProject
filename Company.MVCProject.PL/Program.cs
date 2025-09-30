@@ -1,6 +1,8 @@
 using Company.MVCProject.BLL.Interfaces;
 using Company.MVCProject.BLL.Repositories;
 using Company.MVCProject.DAL.Data.Contexts;
+using Company.MVCProject.PL.Mapping;
+using Company.MVCProject.PL.Services;
 using Microsoft.EntityFrameworkCore;
 
 namespace Company.MVCProject.PL
@@ -19,6 +21,19 @@ namespace Company.MVCProject.PL
             });
             builder.Services.AddScoped<IDepartmentRepository, DepartmentRepository>();
             builder.Services.AddScoped<IEmployeeRepository, EmployeeRepository>();
+
+            //builder.Services.AddAutoMapper(M => M.AddProfile(typeof(EmployeeProfile)));
+
+            builder.Services.AddAutoMapper(M => M.AddProfile(new EmployeeProfile()));
+
+            //builder.Services.AddScoped(); // Create Object Life Time Per Request - UnReachable Object
+            //builder.Services.AddTransient(); // Create Object Life Time Per Operation
+            //builder.Services.AddSingleton(); // Create Object Life Time Per Application
+
+            builder.Services.AddScoped<IScopedService, ScopedService>(); // Per Request
+            builder.Services.AddTransient<ITransientService, TransientService>(); // Per Operation
+            builder.Services.AddSingleton<ISingletonService, SingletonService>(); // Per Application
+
 
             var app = builder.Build();
 

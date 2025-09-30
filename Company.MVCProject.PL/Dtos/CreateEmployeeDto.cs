@@ -1,4 +1,5 @@
-﻿using System.ComponentModel;
+﻿using Company.MVCProject.DAL.Models;
+using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 
 namespace Company.MVCProject.PL.Dtos
@@ -24,5 +25,8 @@ namespace Company.MVCProject.PL.Dtos
         public DateTime HiringDate { get; set; }
         [DisplayName("Date of Creation")]
         public DateTime CreateAt { get; set; }
+        [DisplayName("Department")]
+        public int? DepartmentId { get; set; }
+        public Department? Department { get; set; }
     }
 }
