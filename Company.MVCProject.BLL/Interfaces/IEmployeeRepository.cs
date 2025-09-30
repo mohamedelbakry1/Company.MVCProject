@@ -9,6 +9,6 @@ namespace Company.MVCProject.BLL.Interfaces
 {
     public interface IEmployeeRepository : IGenericRepository<Employee>
     {
-
+        List<Employee>? GetByName(string name);
     }
 }

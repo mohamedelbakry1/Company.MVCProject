@@ -1,4 +1,5 @@
-﻿using Company.MVCProject.BLL.Interfaces;
+﻿using AutoMapper;
+using Company.MVCProject.BLL.Interfaces;
 using Company.MVCProject.DAL.Models;
 using Company.MVCProject.PL.Dtos;
 using Microsoft.AspNetCore.Mvc;
@@ -8,15 +9,31 @@ namespace Company.MVCProject.PL.Controllers
     public class EmployeeController : Controller
     {
         private readonly IEmployeeRepository _employeeRepository;
+        private readonly IDepartmentRepository _departmentRepository;
+        private readonly IMapper _mapper;
 
-        public EmployeeController(IEmployeeRepository employeeRepository)
+        public EmployeeController(
+            IEmployeeRepository employeeRepository, 
+            IDepartmentRepository departmentRepository,
+            IMapper mapper
+            )
         {
             _employeeRepository = employeeRepository;
+            _departmentRepository = departmentRepository;
+            _mapper = mapper;
         }
         [HttpGet]
-        public IActionResult Index()
+        public IActionResult Index(string? SearchInput)
         {
-            var employees = _employeeRepository.GetAll();
+            IEnumerable<Employee> employees;
+            if (string.IsNullOrEmpty(SearchInput))
+            {
+                employees = _employeeRepository.GetAll();
+            }
+            else
+            {
+                employees = _employeeRepository.GetByName(SearchInput);
+            }
             // Dictionary : 3 Property
             // 1.ViewData : Transfer Extra Information From Controller (Action) to View
             //ViewData["Message"] = "Hello from ViewData";
@@ -32,7 +49,9 @@ namespace Company.MVCProject.PL.Controllers
         [HttpGet]
         public IActionResult Create()
         {
-           return View();
+            var departments = _departmentRepository.GetAll();
+            ViewData["Departments"] = departments;
+            return View();
         }
 
         [HttpPost]
@@ -40,19 +59,22 @@ namespace Company.MVCProject.PL.Controllers
         {
             if (ModelState.IsValid)
             {
-                var employee = new Employee()
-                {
-                    Name = model.Name,
-                    Age = model.Age,
-                    Email = model.Email,
-                    Address = model.Address,
-                    Phone = model.Phone,
-                    Salary = model.Salary,
-                    IsActive = model.IsActive,
-                    IsDeleted = model.IsDeleted,
-                    HiringDate = model.HiringDate,
-                    CreateAt = model.CreateAt
-                };
+                // Manual Mapping
+                //var employee = new Employee()
+                //{
+                //    Name = model.Name,
+                //    Age = model.Age,
+                //    Email = model.Email,
+                //    Address = model.Address,
+                //    Phone = model.Phone,
+                //    Salary = model.Salary,
+                //    IsActive = model.IsActive,
+                //    IsDeleted = model.IsDeleted,
+                //    HiringDate = model.HiringDate,
+                //    CreateAt = model.CreateAt,
+                //    DepartmentId = model.DepartmentId
+                //};
+                var employee = _mapper.Map<Employee>(model);
                 var count = _employeeRepository.Add(employee);
                 if(count > 0)
                 {
@@ -70,29 +92,35 @@ namespace Company.MVCProject.PL.Controllers
 
             var employee = _employeeRepository.Get(id.Value);
             if(employee is null) return NotFound($"Employee wtih {id} is not found");  
+
+            
+
             return View(ViewName, employee);
         }
 
         [HttpGet]
         public IActionResult Edit(int? id)
         {
+            var departments = _departmentRepository.GetAll();
+            ViewData["Departments"] = departments;
             if (id is null) return BadRequest("Invalid Id");
 
             var employee = _employeeRepository.Get(id.Value);
             if (employee is null) return NotFound($"Employee wtih {id} is not found");
-            var employeeDto = new CreateEmployeeDto()
-            {
-                Name = employee.Name,
-                Age = employee.Age,
-                Email = employee.Email,
-                Address = employee.Address,
-                Phone = employee.Phone,
-                Salary = employee.Salary,
-                IsActive = employee.IsActive,
-                IsDeleted = employee.IsDeleted,
-                HiringDate = employee.HiringDate,
-                CreateAt = employee.CreateAt
-            };
+            //var employeeDto = new CreateEmployeeDto()
+            //{
+            //    Name = employee.Name,
+            //    Age = employee.Age,
+            //    Email = employee.Email,
+            //    Address = employee.Address,
+            //    Phone = employee.Phone,
+            //    Salary = employee.Salary,
+            //    IsActive = employee.IsActive,
+            //    IsDeleted = employee.IsDeleted,
+            //    HiringDate = employee.HiringDate,
+            //    CreateAt = employee.CreateAt
+            //};
+            var employeeDto = _mapper.Map<CreateEmployeeDto>(employee);
             return View(employeeDto);
         }
 
