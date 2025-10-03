@@ -78,7 +78,7 @@ namespace Company.MVCProject.PL.Controllers
                 var count = _employeeRepository.Add(employee);
                 if(count > 0)
                 {
-                    TempData["Message"] = "Employee Created Successfully";
+                    TempData["CreateMessage"] = "Employee Created Successfully";
                     return RedirectToAction("Index");
                 }
             }
@@ -153,7 +153,10 @@ namespace Company.MVCProject.PL.Controllers
                 if (id != employee.Id) return BadRequest("Id is not matched");
                 var count = _employeeRepository.Delete(employee);
                 if (count > 0)
+                {
+                    TempData["DeleteMessage"] = "Employee Deleted Successfully";
                     return RedirectToAction(nameof(Index));
+                }
             }
             return View(employee);
         }
