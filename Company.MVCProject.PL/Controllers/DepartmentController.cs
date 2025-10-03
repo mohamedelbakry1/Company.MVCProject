@@ -1,4 +1,5 @@
-﻿using Company.MVCProject.BLL.Interfaces;
+﻿using AutoMapper;
+using Company.MVCProject.BLL.Interfaces;
 using Company.MVCProject.BLL.Repositories;
 using Company.MVCProject.DAL.Models;
 using Company.MVCProject.PL.Dtos;
@@ -10,11 +11,13 @@ namespace Company.MVCProject.PL.Controllers
     public class DepartmentController : Controller
     {
         private readonly IDepartmentRepository _departmentRepository;
+        private readonly IMapper _mapper;
 
         // Ask CLR Create Object From DepartmentRepository
-        public DepartmentController(IDepartmentRepository departmentRepository)
+        public DepartmentController(IDepartmentRepository departmentRepository,IMapper mapper)
         {
             _departmentRepository = departmentRepository;
+            _mapper = mapper;
         }
 
         [HttpGet] // GET: /Department/Index
@@ -35,15 +38,17 @@ namespace Company.MVCProject.PL.Controllers
         {
             if (ModelState.IsValid) // Server Side Validation
             {
-                var department = new Department()
-                {
-                    Code = model.Code,
-                    Name = model.Name,
-                    CreateAt = model.CreateAt
-                };
-               var count = _departmentRepository.Add(department);
+                //var department = new Department()
+                //{
+                //    Code = model.Code,
+                //    Name = model.Name,
+                //    CreateAt = model.CreateAt
+                //};
+                var department = _mapper.Map<Department>(model);
+                var count = _departmentRepository.Add(department);
                 if(count > 0)
                 {
+                    TempData["CreateMessage"] = "Department Created Successfully";
                     return RedirectToAction(nameof(Index));
                 }
             }
@@ -65,12 +70,13 @@ namespace Company.MVCProject.PL.Controllers
             if (id is null) return BadRequest("Invalid Id");
             var department = _departmentRepository.Get(id.Value);
             if (department is null) return NotFound($"Department with {id} Not Found");
-            var departmentDto = new CreateDepartmentDto()
-            {
-                Code = department.Code,
-                Name = department.Name,
-                CreateAt = department.CreateAt
-            };
+            var departmentDto = _mapper.Map<CreateDepartmentDto>(department);
+            //var departmentDto = new CreateDepartmentDto()
+            //{
+            //    Code = department.Code,
+            //    Name = department.Name,
+            //    CreateAt = department.CreateAt
+            //};
             return View(departmentDto);
             //return Details(id, "Edit");
         }
@@ -108,7 +114,10 @@ namespace Company.MVCProject.PL.Controllers
                 if (id != model.Id) return BadRequest("Error 404");
                 var count = _departmentRepository.Delete(model);
                 if (count > 0)
+                {
+                    TempData["DeleteMessage"] = "Department Deleted Successfully";
                     return RedirectToAction(nameof(Index));
+                }
             }
             return View(model);
         }

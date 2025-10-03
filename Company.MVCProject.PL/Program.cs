@@ -25,6 +25,7 @@ namespace Company.MVCProject.PL
             //builder.Services.AddAutoMapper(M => M.AddProfile(typeof(EmployeeProfile)));
 
             builder.Services.AddAutoMapper(M => M.AddProfile(new EmployeeProfile()));
+            builder.Services.AddAutoMapper(M => M.AddProfile(new DepartmentProfile()));
 
             //builder.Services.AddScoped(); // Create Object Life Time Per Request - UnReachable Object
             //builder.Services.AddTransient(); // Create Object Life Time Per Operation

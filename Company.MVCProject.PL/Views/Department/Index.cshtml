@@ -8,6 +8,20 @@
 <br />
 <br />
 
+@if (!string.IsNullOrEmpty(TempData["CreateMessage"] as string))
+{
+    <div class="m-3 alert alert-success">
+        <p>@TempData["CreateMessage"]</p>
+    </div>
+}
+
+@if (!string.IsNullOrEmpty(TempData["DeleteMessage"] as string))
+{
+    <div class="m-3 alert alert-success">
+        <p>@TempData["DeleteMessage"]</p>
+    </div>
+}
+
 <a asp-action="Create" asp-controller="Department" class="btn btn-primary">Create Department</a>
 
 <br />
