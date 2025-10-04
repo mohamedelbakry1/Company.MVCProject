@@ -1,3 +1,4 @@
+using Company.MVCProject.BLL;
 using Company.MVCProject.BLL.Interfaces;
 using Company.MVCProject.BLL.Repositories;
 using Company.MVCProject.DAL.Data.Contexts;
@@ -19,8 +20,9 @@ namespace Company.MVCProject.PL
             {
                 options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
             });
-            builder.Services.AddScoped<IDepartmentRepository, DepartmentRepository>();
-            builder.Services.AddScoped<IEmployeeRepository, EmployeeRepository>();
+            //builder.Services.AddScoped<IDepartmentRepository, DepartmentRepository>();
+            //builder.Services.AddScoped<IEmployeeRepository, EmployeeRepository>();
+            builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 
             //builder.Services.AddAutoMapper(M => M.AddProfile(typeof(EmployeeProfile)));
 
