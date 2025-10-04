@@ -42,7 +42,8 @@ namespace Company.MVCProject.DAL.Data.Migrations
                     IsDeleted = table.Column<bool>(type: "bit", nullable: false),
                     HiringDate = table.Column<DateTime>(type: "datetime2", nullable: false),
                     CreateAt = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    DepartmentId = table.Column<int>(type: "int", nullable: true)
+                    DepartmentId = table.Column<int>(type: "int", nullable: true),
+                    ImageName = table.Column<string>(type: "nvarchar(max)", nullable: true)
                 },
                 constraints: table =>
                 {

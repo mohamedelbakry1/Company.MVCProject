@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Company.MVCProject.DAL.Data.Migrations
 {
     [DbContext(typeof(CompanyDbContext))]
-    [Migration("20250930193629_AddModuleWithRelationship")]
+    [Migration("20251004110454_AddModuleWithRelationship")]
     partial class AddModuleWithRelationship
     {
         /// <inheritdoc />
@@ -76,6 +76,9 @@ namespace Company.MVCProject.DAL.Data.Migrations
 
                     b.Property<DateTime>("HiringDate")
                         .HasColumnType("datetime2");
+
+                    b.Property<string>("ImageName")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<bool>("IsActive")
                         .HasColumnType("bit");
