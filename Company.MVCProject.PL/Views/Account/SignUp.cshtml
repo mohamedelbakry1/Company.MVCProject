@@ -1,33 +1,74 @@
 ﻿@model SignUpDto
 @{
-    ViewData["Title"] = "SingUp";
-    Layout = "~/Views/Shared/_AuthLayout.cshtml";
+	ViewData["Title"] = "SignUp";
+	Layout = "~/Views/Shared/_AuthLayout.cshtml";
 }
 
 <div class="main-agileinfo">
 	<div class="agileits-top">
-		<div asp-validation-summary="All" class="m-3 alert alert-info"></div>
-		<form asp-action="SignUp">
-			<input class="text" asp-for="UserName" placeholder="Username" required="">
-			<input class="text" asp-for="FirstName" placeholder="FirstName" required="">
-			<input class="text" asp-for="LastName" placeholder="LastName" required="">
-			<input class="text email" asp-for="Email" placeholder="Email" required="">
-			<input class="text" asp-for="Password" placeholder="Password" required="">
-			<input class="text w3lpass" asp-for="ConfirmPassword" placeholder="Confirm Password" required="">
-			<div class="wthree-text">
-				<label class="anim">
-					<input asp-for="IsAgree" class="checkbox" required="">
-					<span>I Agree To The Terms & Conditions</span>
-				</label>
-				<div class="clear"> </div>
+		<div asp-validation-summary="All" class="validation-summary"></div>
+		<form asp-action="SignUp" class="signup-form">
+
+			<div class="input-group">
+				<label asp-for="UserName">Username</label>
+				<input class="text" type="text" asp-for="UserName" placeholder="Enter your username" required="">
+				<span asp-validation-for="UserName" class="error-message"></span>
+
 			</div>
-			<input type="submit" value="SIGNUP">
+
+			<div class="input-group">
+				<label asp-for="FirstName">First Name</label>
+				<input class="text" type="text" asp-for="FirstName" placeholder="Enter your first name" required="">
+				<span asp-validation-for="FirstName" class="error-message"></span>
+
+			</div>
+
+			<div class="input-group">
+				<label asp-for="LastName">Last Name</label>
+				<input class="text" type="text" asp-for="LastName" placeholder="Enter your last name" required="">
+				<span asp-validation-for="LastName" class="error-message"></span>
+
+			</div>
+
+			<div class="input-group">
+				<label asp-for="Email">Email Address</label>
+				<input class="text email" type="email" asp-for="Email" placeholder="Enter your email address" required="">
+				<span asp-validation-for="Email" class="error-message"></span>
+
+			</div>
+
+			<div class="input-group">
+				<label asp-for="Password">Password</label>
+				<input class="text" type="password" asp-for="Password" placeholder="Create a strong password" required="">
+				<span asp-validation-for="Password" class="error-message"></span>
+
+			</div>
+
+			<div class="input-group">
+				<label asp-for="ConfirmPassword">Confirm Password</label>
+				<input class="text w3lpass" type="password" asp-for="ConfirmPassword" placeholder="Confirm your password" required="">
+				<span asp-validation-for="ConfirmPassword" class="error-message"></span>
+
+			</div>
+
+			<div class="checkbox-group">
+				<input type="checkbox" asp-for="IsAgree" required="">
+				<label class="terms-label">
+					I Agree To The <a href="#terms" target="_blank">Terms & Conditions</a>
+				</label>
+				<span asp-validation-for="IsAgree" class="error-message"></span>
+			</div>
+
+			<input type="submit" value="SIGN UP" class="submit-btn">
 		</form>
-		<p>Don't have an Account? <a asp-action="SignIn"> Login Now!</a></p>
+
+		<div class="login-link">
+			<p>Already have an account? <a asp-action="SignIn">Login Now</a></p>
+		</div>
 	</div>
 </div>
 
-@section ValidationSection{
+@section ValidationSection {
 	<script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
 	<script src="~/lib/jquery-validation-unobtrusive/dist/jquery.validate.unobtrusive.min.js"></script>
 }

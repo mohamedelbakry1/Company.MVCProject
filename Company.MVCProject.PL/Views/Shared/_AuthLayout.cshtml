@@ -1,28 +1,33 @@
-﻿
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html>
 <head>
 	<title>Creative Colorlib @ViewData["Title"] Form</title>
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<meta name="description" content="Professional Authentication Form">
+	<meta name="theme-color" content="#667eea">
 	<script type="application/x-javascript"> addEventListener("load", function() { setTimeout(hideURLbar, 0); }, false); function hideURLbar(){ window.scrollTo(0,1); } </script>
 	<!-- Custom Theme files -->
 	<link href="~/css/StyleSheet.css" rel="stylesheet" type="text/css" media="all" />
 	<!-- //Custom Theme files -->
 	<!-- web font -->
-	<link href="//fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i" rel="stylesheet">
+	<link href="https://fonts.googleapis.com/css?family=Segoe+UI:300,400,500,600,700&display=swap" rel="stylesheet">
 	<!-- //web font -->
 </head>
 <body>
 	<!-- main -->
 	<div class="main-w3layouts wrapper">
 		<h1>Creative @ViewData["Title"] Form</h1>
-		
-		@RenderBody()
+
+		<div class="form-container">
+			<h2 class="form-title">@ViewData["Title"]</h2>
+
+			@RenderBody()
+		</div>
 
 		<!-- copyright -->
 		<div class="colorlibcopy-agile">
-			<p>© @DateTime.Now.Year Colorlib @ViewData["Title"] Form. All rights reserved | Design by <a href="https://colorlib.com/" target="_blank">Colorlib</a></p>
+			<p>© @DateTime.Now.Year @ViewData["Title"] Form. All rights reserved | Design by <a href="https://github.com/mohamedelbakry1" target="_blank">Mohamed Elbakry</a></p>
 		</div>
 		<!-- //copyright -->
 		<ul class="colorlib-bubbles">
@@ -39,11 +44,9 @@
 		</ul>
 	</div>
 	<!-- //main -->
-
 	<script src="~/lib/jquery/dist/jquery.min.js"></script>
 	<script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
 	<script src="~/js/site.js" asp-append-version="true"></script>
 	@await RenderSectionAsync("ValidationSection", required: false)
-
 </body>
 </html>
