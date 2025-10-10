@@ -3,11 +3,13 @@ using Company.MVCProject.BLL.Interfaces;
 using Company.MVCProject.BLL.Repositories;
 using Company.MVCProject.DAL.Models;
 using Company.MVCProject.PL.Dtos;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
 
 namespace Company.MVCProject.PL.Controllers
 {
+    [Authorize]
     // MVC Controller
     public class DepartmentController : Controller
     {
