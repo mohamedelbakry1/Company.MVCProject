@@ -2,8 +2,10 @@ using Company.MVCProject.BLL;
 using Company.MVCProject.BLL.Interfaces;
 using Company.MVCProject.BLL.Repositories;
 using Company.MVCProject.DAL.Data.Contexts;
+using Company.MVCProject.DAL.Models;
 using Company.MVCProject.PL.Mapping;
 using Company.MVCProject.PL.Services;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
 namespace Company.MVCProject.PL
@@ -37,6 +39,18 @@ namespace Company.MVCProject.PL
             builder.Services.AddTransient<ITransientService, TransientService>(); // Per Operation
             builder.Services.AddSingleton<ISingletonService, SingletonService>(); // Per Application
 
+            builder.Services.AddIdentity<AppUser, IdentityRole>()
+                            .AddEntityFrameworkStores<CompanyDbContext>()
+                            .AddDefaultTokenProviders();
+
+            builder.Services.ConfigureApplicationCookie(config =>
+            {
+                config.LoginPath = "/Account/SignIn";
+            });
+
+            
+                            
+
 
             var app = builder.Build();
 
@@ -51,6 +65,7 @@ namespace Company.MVCProject.PL
             app.UseHttpsRedirection();
             app.UseRouting();
 
+            app.UseAuthentication();
             app.UseAuthorization();
 
             app.MapStaticAssets();
