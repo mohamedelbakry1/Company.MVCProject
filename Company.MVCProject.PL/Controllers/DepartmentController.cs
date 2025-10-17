@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace Company.MVCProject.PL.Controllers
 {
-    [Authorize]
+    
     // MVC Controller
     public class DepartmentController : Controller
     {

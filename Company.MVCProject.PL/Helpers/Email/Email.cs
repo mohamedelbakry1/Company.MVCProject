@@ -1,4 +1,4 @@
-﻿namespace Company.MVCProject.PL.Helpers
+﻿namespace Company.MVCProject.PL.Helpers.Email
 {
     public class Email
     {
