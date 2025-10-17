@@ -3,10 +3,15 @@ using Company.MVCProject.BLL.Interfaces;
 using Company.MVCProject.BLL.Repositories;
 using Company.MVCProject.DAL.Data.Contexts;
 using Company.MVCProject.DAL.Models;
+using Company.MVCProject.PL.Helpers.Email;
+using Company.MVCProject.PL.Helpers.Sms;
 using Company.MVCProject.PL.Mapping;
 using Company.MVCProject.PL.Services;
+using Microsoft.AspNetCore.Authentication.Facebook;
+using Microsoft.AspNetCore.Authentication.Google;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using System.Net.Mail;
 
 namespace Company.MVCProject.PL
 {
@@ -15,6 +20,18 @@ namespace Company.MVCProject.PL
         public static void Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
+
+            
+            builder.Configuration
+                .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
+                .AddJsonFile($"appsettings.{builder.Environment.EnvironmentName}.json", optional: true)
+                .AddEnvironmentVariables();
+
+            if (builder.Environment.IsDevelopment())
+            {     
+                builder.Configuration.AddUserSecrets<Program>(optional: true);
+            }
+
 
             // Add services to the container.
             builder.Services.AddControllersWithViews();
@@ -48,8 +65,26 @@ namespace Company.MVCProject.PL
                 config.LoginPath = "/Account/SignIn";
             });
 
-            
-                            
+            builder.Services.Configure<MailSettings>(builder.Configuration.GetSection("MailSettings"));
+            builder.Services.Configure<TwilioSettings>(builder.Configuration.GetSection("TwilioSettings"));
+
+            builder.Services.AddScoped<IMailService, MailService>();
+            builder.Services.AddScoped<ITwilioServices, TwilioServices>();
+
+            builder.Services.AddAuthentication().AddGoogle(o =>
+            {
+                o.ClientId = builder.Configuration["Authentication:Google:ClientId"];
+                o.ClientSecret = builder.Configuration["Authentication:Google:ClientSecret"];
+            });
+
+
+            //builder.Services.AddAuthentication(o =>
+            //{
+            //}).AddFacebook(o =>
+            //{
+            //    o.ClientId = builder.Configuration["Authentication:Facebook:ClientId"];
+            //    o.ClientId = builder.Configuration["Authentication:Facebook:ClientSecret"];
+            //});
 
 
             var app = builder.Build();

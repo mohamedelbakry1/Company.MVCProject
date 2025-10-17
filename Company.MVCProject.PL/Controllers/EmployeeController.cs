@@ -2,14 +2,14 @@
 using Company.MVCProject.BLL.Interfaces;
 using Company.MVCProject.DAL.Models;
 using Company.MVCProject.PL.Dtos;
-using Company.MVCProject.PL.Helpers;
+using Company.MVCProject.PL.Helpers.UploadFile;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
 
 namespace Company.MVCProject.PL.Controllers
 {
-    [Authorize]
+    
     public class EmployeeController : Controller
     {
         private readonly IUnitOfWork _unitOfWork;
@@ -53,6 +53,7 @@ namespace Company.MVCProject.PL.Controllers
             // 3.TempData
             return View(employees);
         }
+
 
         [HttpGet]
         public async Task<IActionResult> Create()

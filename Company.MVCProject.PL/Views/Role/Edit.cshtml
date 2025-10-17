@@ -1,15 +1,14 @@
-﻿@model CreateEmployeeDto
+﻿@model RoleToReturnDto
 @{
     ViewData["Title"] = "Edit";
 }
 
-<h1>Edit Employee</h1>
+<h1>Edit Role</h1>
 <br />
 <br />
 
 <form asp-action="Edit" enctype="multipart/form-data">
-    <partial name="EmployeePartialView/_CreateEditPartialView" />
-    <input asp-for="ImageName" hidden />
+    <partial name="RolePartialView/_CreateEditPartialView" />
 
 
     <div class="my-3">

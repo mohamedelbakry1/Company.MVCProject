@@ -1,6 +1,10 @@
 ﻿using Company.MVCProject.DAL.Models;
 using Company.MVCProject.PL.Dtos;
-using Company.MVCProject.PL.Helpers;
+using Company.MVCProject.PL.Helpers.Email;
+using Company.MVCProject.PL.Helpers.Sms;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.Facebook;
+using Microsoft.AspNetCore.Authentication.Google;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.CodeAnalysis.Emit;
@@ -12,11 +16,15 @@ namespace Company.MVCProject.PL.Controllers
     {
         private readonly UserManager<AppUser> _userManager;
         private readonly SignInManager<AppUser> _signInManager;
+        private readonly IMailService _mailService;
+        private readonly ITwilioServices _twilioServices;
 
-        public AccountController(UserManager<AppUser> userManager, SignInManager<AppUser> signInManager)
+        public AccountController(UserManager<AppUser> userManager, SignInManager<AppUser> signInManager,IMailService mailService, ITwilioServices twilioServices)
         {
             _userManager = userManager;
             _signInManager = signInManager;
+            _mailService = mailService;
+            _twilioServices = twilioServices;
         }
 
         #region SignUp
@@ -142,7 +150,8 @@ namespace Company.MVCProject.PL.Controllers
                         Body = url
                     };
                     // Send Email
-                    var flag = EmailSettings.SendEmail(email);
+                    //var flag = EmailSettings.SendEmail(email);
+                    var flag = _mailService.SendEmail(email);
                     if (flag)
                     {
                         // Check Your Inbox
@@ -154,8 +163,43 @@ namespace Company.MVCProject.PL.Controllers
             return View();
         }
 
+        [HttpPost]
+        public async Task<IActionResult> SendResetPasswordSms(ForgetPasswordDto model)
+        {
+            if (ModelState.IsValid)
+            {
+                var user = await _userManager.FindByEmailAsync(model.Email);
+                if (user is not null)
+                {
+                    // Generate Token
+                    var token = await _userManager.GeneratePasswordResetTokenAsync(user);
+
+                    // Create URL
+                    var url = Url.Action("ResetPassword", "Account", new { email = model.Email, token }, Request.Scheme);
+
+                    // Create Sms
+                    var sms = new Sms()
+                    {
+                        To = user.PhoneNumber,
+                        Body = url
+                    };
+                    // Send Sms
+                    await _twilioServices.SendSms(sms);
+                    return RedirectToAction(nameof(CheckYourPhone));
+                }
+            }
+            ModelState.AddModelError("", "Invalid Reset Password Opertation !!");
+            return View();
+        }
+
         [HttpGet]
         public IActionResult CheckYourInbox()
+        {
+            return View();
+        }
+
+        [HttpGet]
+        public IActionResult CheckYourPhone()
         {
             return View();
         }
@@ -197,6 +241,67 @@ namespace Company.MVCProject.PL.Controllers
 
         #endregion
 
+        #region Permissions
+
+        [HttpGet]
+        public IActionResult AccessDenied()
+        {
+            return View();
+        }
+
+        #endregion
+
+        #region SignIn with Google
+        public IActionResult GoogleLogin()
+        {
+            var prop = new AuthenticationProperties()
+            {
+                RedirectUri = Url.Action("GoogleResponse")
+            };
+            return Challenge(prop, GoogleDefaults.AuthenticationScheme);
+        }
+
+        public async Task<IActionResult> GoogleResponse()
+        {
+            var result = await HttpContext.AuthenticateAsync(GoogleDefaults.AuthenticationScheme);
+            var cliams = result.Principal.Identities.FirstOrDefault().Claims.Select(cliam => new
+            {
+                cliam.Type,
+                cliam.Value,
+                cliam.Issuer,
+                cliam.OriginalIssuer
+            });
+            return RedirectToAction("Index", "Home");
+        }
+
+
+        #endregion
+
+        #region SignIn with Facebook
+        //public IActionResult FacebookLogin()
+        //{
+        //    var prop = new AuthenticationProperties()
+        //    {
+        //        RedirectUri = Url.Action("FacebookResponse")
+        //    };
+        //    return Challenge(prop, FacebookDefaults.AuthenticationScheme);
+        //}
+
+        //public async Task<IActionResult> FacebookResponse()
+        //{
+        //    var result = await HttpContext.AuthenticateAsync(FacebookDefaults.AuthenticationScheme);
+        //    var cliams = result.Principal.Identities.FirstOrDefault().Claims.Select(cliam => new
+        //    {
+        //        cliam.Type,
+        //        cliam.Value,
+        //        cliam.Issuer,
+        //        cliam.OriginalIssuer
+        //    });
+        //    return RedirectToAction("Index", "Home");
+        //}
+
+
+        #endregion
 
     }
 }
