@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace Company.MVCProject.PL.Controllers
 {
-    
+    [Authorize]
     public class EmployeeController : Controller
     {
         private readonly IUnitOfWork _unitOfWork;
